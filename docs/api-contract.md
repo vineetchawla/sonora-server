@@ -1,10 +1,10 @@
 # Sonora API contract, v1
 
-The public mobile API is versioned at `/v1`. JSON requests and responses use UTC ISO-8601 timestamps and opaque IDs.
+Sonora exposes a versioned JSON API at `/v1`. It is implemented and hosted as part of the Sonora Node.js service; no third-party media server is involved.
 
 ## Authentication
 
-The Android app authenticates with Sonora, never with an Audiobookshelf administrator key. Successful authentication returns a short-lived Sonora JWT; clients send it as `Authorization: Bearer <token>`.
+The Android app authenticates with Sonora. Successful authentication returns a short-lived Sonora JWT; clients send it as `Authorization: Bearer <token>`. Private media paths are never exposed directly.
 
 ## First endpoints
 
@@ -16,6 +16,6 @@ The Android app authenticates with Sonora, never with an Audiobookshelf administ
 | `GET /v1/books` | Cursor-paginated audiobook list with filtering. |
 | `GET /v1/books/{id}` | Book metadata, chapters, cover, and playback state. |
 | `PUT /v1/books/{id}/progress` | Idempotently sync current position and completion. |
-| `POST /v1/books/{id}/stream` | Return a time-limited stream URL. |
+| `POST /v1/books/{id}/stream` | Return a Sonora-authorized, time-limited stream URL. |
 
-Progress writes must include a client-generated idempotency key so reconnects and multi-device playback cannot create conflicting history.
+Progress writes will accept a client-generated idempotency key so reconnects and multi-device playback cannot create conflicting history.
