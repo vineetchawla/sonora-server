@@ -4,21 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "start": "node dist/server.js",
-    "build": "tsc -p tsconfig.json",
-    "check": "tsc --noEmit -p tsconfig.json"
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "check": "node --check src/server.js && node --check src/config.js && node --check src/routes/health.js"
   },
   "dependencies": {
     "@fastify/cors": "^11.0.0",
     "@fastify/jwt": "^9.0.0",
     "fastify": "^5.0.0",
     "zod": "^3.24.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.0.0",
-    "tsx": "^4.0.0",
-    "typescript": "^5.7.0"
   },
   "engines": {
     "node": ">=22"
