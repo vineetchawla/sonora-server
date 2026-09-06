@@ -1,12 +1,14 @@
 services:
-  audiobookshelf:
-    image: ghcr.io/advplyr/audiobookshelf:latest
+  api:
+    build: .
+    env_file: .env
     ports:
-      - "13378:80"
+      - "${SONORA_PORT:-3333}:3333"
     volumes:
-      - ./data/audiobooks:/audiobooks
-      - ./data/abs-config:/config
-      - ./data/abs-metadata:/metadata
+      - ./data/audiobooks:/media/audiobooks:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
 
   postgres:
@@ -15,7 +17,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-sonora}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sonora-local-only}
       POSTGRES_DB: ${POSTGRES_DB:-sonora}
-    ports:
-      - "5432:5432"
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
