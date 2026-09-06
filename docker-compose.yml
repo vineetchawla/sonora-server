@@ -1,0 +1,21 @@
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    ports:
+      - "13378:80"
+    volumes:
+      - ./data/audiobooks:/audiobooks
+      - ./data/abs-config:/config
+      - ./data/abs-metadata:/metadata
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sonora}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sonora-local-only}
+      POSTGRES_DB: ${POSTGRES_DB:-sonora}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
